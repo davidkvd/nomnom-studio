@@ -3,6 +3,9 @@ import { createClient } from '@/lib/supabase/server';
 import { DashboardClient } from './DashboardClient';
 import type { Profile, ProcessingJob } from '@/types';
 
+// Never statically pre-render — this page requires auth + Supabase cookies at runtime
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Dashboard — NomNom Studio',
   description: 'Transform your food photos into 4K studio masterpieces.',
