@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import {
   VIBE_PROMPTS,
@@ -12,8 +13,7 @@ import type { VibeMode, AspectRatioKey } from '@/types';
 
 // ── Supabase admin client (bypasses RLS for trusted server ops) ──
 function createAdminClient() {
-  const { createClient } = require('@supabase/supabase-js');
-  return createClient(
+  return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     { auth: { persistSession: false } }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { ProcessingJob, ProcessedImage } from '@/types';
 
@@ -17,7 +17,9 @@ export interface JobProgressState {
  * using Supabase Realtime (postgres_changes).
  */
 export function useJobProgress(jobId: string | null): JobProgressState {
-  const supabase = createClient();
+  const supabaseRef = useRef<ReturnType<typeof createClient> | null>(null);
+  if (!supabaseRef.current) supabaseRef.current = createClient();
+  const supabase = supabaseRef.current;
 
   const [state, setState] = useState<JobProgressState>({
     job: null,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import {
   MAX_FILES,
@@ -202,11 +202,12 @@ export function UploadZone({ files, onChange, disabled }: UploadZoneProps) {
 function FilePreviewTile({ file, onRemove }: { file: File; onRemove: () => void }) {
   const [src, setSrc] = useState<string | null>(null);
 
-  // Generate object URL lazily
-  if (!src) {
+  // Generate object URL after mount and clean up on unmount to prevent memory leaks
+  useEffect(() => {
     const url = URL.createObjectURL(file);
     setSrc(url);
-  }
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
 
   return (
     <div className="group relative aspect-square">
